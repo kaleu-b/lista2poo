@@ -4,13 +4,32 @@ public class Exerciciorelogio {
     private int horas;
     private int minutos;
     private int segundos;
+    private int tempoTotalEmSegundos;
 
-    // métodos getters e setters de cada atributo. não vou explicar 1 a 1.
-    public void setHoras(int horas) {
-        this.horas = horas;
-        if (this.horas >= 24) {
-            this.horas += this.horas % 24;
+    public void setTempoTotalEmSegundos(){
+        this.tempoTotalEmSegundos = (this.horas * 3600) + (this.minutos * 60) + (this.segundos);
+    }
+
+    public int getTempoTotalEmSegundos(){
+        return this.tempoTotalEmSegundos;
+    }
+
+    public void compararTempoTotal(Exerciciorelogio outroRelogio) {
+        int diferençaEmSegundos;
+        if (this.tempoTotalEmSegundos > outroRelogio.getTempoTotalEmSegundos()) {
+            System.out.println("O primeiro relógio está adiantado em relação ao segundo em " + (this.tempoTotalEmSegundos - outroRelogio.getTempoTotalEmSegundos()) + " segundos.");
+        } else if (this.tempoTotalEmSegundos < outroRelogio.getTempoTotalEmSegundos()) {
+            System.out.println("O primeiro relógio está atrasado em relação ao segundo em " + (outroRelogio.getTempoTotalEmSegundos() - this.tempoTotalEmSegundos) + " segundos.");
+        } else {
+            System.out.println("Os dois relógios estão sincronizados.");
         }
+
+    }
+
+    public void setHoras(int horas) {
+        this.horas = horas % 24;
+        // Nota: Para valores negativos, % pode retornar negativo
+        // Mais tarde isso vai ser tratado não deixando o usuário entrar com valores negativos
     }
 
     public int getHoras() {
@@ -18,12 +37,12 @@ public class Exerciciorelogio {
     }
 
     public void setMinutos(int minutos) {
-        this.minutos = minutos;
-        if (this.minutos >= 60) {
-           // this.horas += this.minutos / 60;
-            this.setHoras(this.minutos / 60);
-            this.minutos = this.minutos % 60;
-        }
+        // Calcula horas extras e ajusta minutos
+        int horasExtras = minutos / 60;
+        this.minutos = minutos % 60;
+
+        // Adiciona horas extras às horas atuais
+        this.setHoras(this.horas + horasExtras);
     }
 
     public int getMinutos() {
@@ -31,16 +50,12 @@ public class Exerciciorelogio {
     }
 
     public void setSegundos(int segundos) {
-        this.segundos = segundos;
-        if (this.segundos >= 60) {
-           // this.minutos += this.segundos / 60;
-            this.setHoras(this.segundos / 60);
-            this.segundos = this.segundos % 60;
-        }
+        // Calcula minutos extras e ajusta segundos
+        int minutosExtras = segundos / 60;
+        this.segundos = segundos % 60;
 
-        if (this.minutos >= 60) {
-            this.setHoras(this.getHoras() + this.minutos / 60);
-        }
+        // Adiciona minutos extras aos minutos atuais
+        this.setMinutos(this.minutos + minutosExtras);
     }
 
     public int getSegundos() {
@@ -48,21 +63,20 @@ public class Exerciciorelogio {
     }
 
     public void incrementarsegundos(int valorIncrementoSegundos) {
-        this.setSegundos(this.getSegundos() + valorIncrementoSegundos);
+        this.setSegundos(this.segundos + valorIncrementoSegundos);
     }
 
     public void incrementarhoras(int valorIncrementoHoras) {
-    this.setHoras(this.getHoras() + valorIncrementoHoras);
-
+        this.setHoras(this.horas + valorIncrementoHoras);
     }
 
     public void incrementarMinutos(int valorIncrementoMinutos) {
-        this.setMinutos(this.getMinutos() + valorIncrementoMinutos);
+        this.setMinutos(this.minutos + valorIncrementoMinutos);
     }
 
-    public void sincronizar(Exerciciorelogio relogio1, Exerciciorelogio relogio2) {
-        relogio1.setHoras(relogio2.getHoras());
-        relogio1.setMinutos(relogio2.getMinutos());
-        relogio1.setSegundos(relogio2.getSegundos());
+    public void sincronizar(Exerciciorelogio outroRelogio) {
+        this.setSegundos(outroRelogio.getSegundos());
+        this.setMinutos(outroRelogio.getMinutos());
+        this.setHoras(outroRelogio.getHoras());
     }
 }
